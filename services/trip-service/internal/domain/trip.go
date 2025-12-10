@@ -1,0 +1,23 @@
+package domain
+
+import (
+	"context"
+
+	"go.mongodb.org/mongo-driver/bson/primitive"
+)
+
+
+
+type TripModal struct {
+	ID     primitive.ObjectID
+	UserID string
+	Status string
+	RideFare *RideFareModel
+}
+
+type TripRepository interface {
+	CreateTrip( ctx context.Context , trips *TripModal) (*TripModal , error)
+}
+type TripService interface {
+	CreateTrip( ctx context.Context , fare *RideFareModel) (*TripModal , error)
+}
