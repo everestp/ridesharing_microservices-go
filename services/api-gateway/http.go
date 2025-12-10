@@ -5,10 +5,9 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	grpcclients "ride-sharing/services/api-gateway/grpc_clients"
 	"ride-sharing/shared/contracts"
 	"time"
-
-	"golang.org/x/tools/go/analysis/passes/defers"
 )
 
 func handleTripPreview(w http.ResponseWriter , r *http.Request){
@@ -26,6 +25,17 @@ func handleTripPreview(w http.ResponseWriter , r *http.Request){
 	}
 	jsonBody ,_:= json.Marshal(reqBody)
 	reader := bytes.NewReader(jsonBody)
+
+// grpc -> NOT GOOD IDEA TO PUT gRPC connection here as traffic grow it affect other service
+tripService ,err := grpcclients.NewTripServiceClient()
+if err != nil {
+	log.Fatal(err)
+}
+defer tripService.Close()
+// tripService.Client.PreviewTrip()
+
+
+
 	// TODO : Call Trip Service
 	resp ,err := http.Post("https://trip-service:8083/preview", "applications/json",reader)
 	if err != nil {
