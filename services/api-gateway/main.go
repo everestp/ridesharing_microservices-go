@@ -2,7 +2,6 @@ package main
 
 import (
 	"context"
-	
 	"log"
 	"net/http"
 	"os"
@@ -21,38 +20,38 @@ func main() {
 	log.Println("Starting API Gateway")
 	mux := http.NewServeMux()
 
-	http.HandleFunc("POST /trip/preview", handleTripPreview)
-          server := &http.Server{
-			Addr: httpAddr,
-			Handler: mux,
-		  }
+	// FIXED — all routes must start with /
+	mux.HandleFunc("/trip/preview", handleTripPreview)
+	mux.HandleFunc("/ws/drivers", handleDriversWebSocket)
+	mux.HandleFunc("/ws/riders", handleRidersWebSocket)
 
-		  serverError := make(chan error ,1)
-		  go func() {
-			log.Printf("Server is Listening", httpAddr)
-            serverError <- server.ListenAndServe()
-              
-		  }()
+	server := &http.Server{
+		Addr:    httpAddr,
+		Handler: mux,
+	}
 
-		  shutdown := make(chan os.Signal ,1)
-	    signal.Notify(shutdown,os.Interrupt ,syscall.SIGTERM )
+	serverError := make(chan error, 1)
+	go func() {
+		log.Printf("Server listening on %s", httpAddr)
+		serverError <- server.ListenAndServe()
+	}()
 
-		select {
-		case err:= <-serverError:
-		log.Printf("Error starting the server: %v",err)
+	shutdown := make(chan os.Signal, 1)
+	signal.Notify(shutdown, os.Interrupt, syscall.SIGTERM)
 
+	select {
+	case err := <-serverError:
+		log.Printf("Error starting server: %v", err)
 
-		case sig := <-shutdown:
-			log.Printf("Server is shutting down due to %v signal", sig)
+	case sig := <-shutdown:
+		log.Printf("Shutting down server due to %v", sig)
 
-			ctx ,cancel := context.WithTimeout(context.Background(), 10 * time.Second)
-			defer cancel()
+		ctx, cancel := context.WithTimeout(context.Background(), 10*time.Second)
+		defer cancel()
 
-			if err := server.Shutdown(ctx); err != nil{
-				log.Printf("could not stop the server gracefully : %v", err)
-				server.Close()
-
-			}
+		if err := server.Shutdown(ctx); err != nil {
+			log.Printf("Could not stop server gracefully: %v", err)
+			server.Close()
 		}
-		
-	 }
+	}
+}

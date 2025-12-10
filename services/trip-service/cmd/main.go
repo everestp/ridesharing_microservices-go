@@ -3,6 +3,7 @@ package main
 import (
 	"context"
 	"log"
+	
 
 	"ride-sharing/services/trip-service/internal/domain"
 	"ride-sharing/services/trip-service/internal/infrastructure/repository"
@@ -15,6 +16,8 @@ func main(){
 	ctx := context.Background()
 	inmemRepo :=repository.NewInmemRepository()
 	svc :=service.NewService(inmemRepo)
+	// mux := http.NewServeMux()
+	// httphandler := h.HttpHandler{Service :svc}
 
 
 fare :=&domain.RideFareModel{
