@@ -3,35 +3,52 @@ package main
 import (
 	"context"
 	"log"
-	
+	"net"
+	"net/http"
+	"os"
+	"os/signal"
+	"syscall"
 
-	"ride-sharing/services/trip-service/internal/domain"
 	"ride-sharing/services/trip-service/internal/infrastructure/repository"
 	"ride-sharing/services/trip-service/internal/service"
-	"time"
-)
 
+	grpcsercver "google.golang.org/grpc"
+)
+var GrcpAddr = ":9093"
 
 func main(){
-	ctx := context.Background()
+	
+
+
 	inmemRepo :=repository.NewInmemRepository()
 	svc :=service.NewService(inmemRepo)
-	// mux := http.NewServeMux()
-	// httphandler := h.HttpHandler{Service :svc}
+	
+     ctx ,cancel := context.WithCancel(context.Background())
+	 defer cancel()
+	 go func ()  {
+		sigCh :=make(chan os.Signal ,1)
+		  signal.Notify(sigCh,os.Interrupt, syscall.SIGTERM)
+		  <-sigCh 
+		  cancel()
+	 }()
+   lis ,err := net.Listen("tcp", GrcpAddr)
+   if err != nil{
+	log.Fatalf("Failed to listen : %v", err)
+   }
+	 grpcsercver  := grpcsercver.NewServer()
+  //TODO intiliaze our grpc handler implementation
 
 
-fare :=&domain.RideFareModel{
-	UserID: "42",
+  
+  log.Printf("Starting gRPC server Trip service on port %s", lis.Addr().String())
+  go func(cause error) {
+if err := grpcsercver.Serve(lis); err != nil{
+	log.Printf("Failed to server : %v", err)
+	cancel()
 }
-	 t,err := svc.CreateTrip(ctx, fare )
-	 if err !=nil{
-		log.Println(err)
-	 }
-	 log.Println(t)
-	 // this is the temprorary program running for now
-	 for {
-		time.Sleep(time.Second)
-       time.Sleep(time.Second)
-	 }
-
+  }()
+	// wait for the shutdown signal
+   <-ctx.Done()
+   log.Println("Shutting down grpc Server")
+   grpcsercver.GracefulStop()
 }

@@ -20,6 +20,18 @@ func main() {
 	log.Println("Starting API Gateway")
 	mux := http.NewServeMux()
 
+
+
+
+
+
+
+
+
+
+
+	
+
 	// FIXED — all routes must start with /
 	mux.HandleFunc("/trip/preview", enableCORS(handleTripPreview))
 	mux.HandleFunc("/ws/drivers", handleDriversWebSocket)
