@@ -4,11 +4,11 @@ import (
 	"context"
 	"log"
 	"net"
-	"net/http"
 	"os"
 	"os/signal"
 	"syscall"
 
+	"ride-sharing/services/trip-service/internal/infrastructure/grpc"
 	"ride-sharing/services/trip-service/internal/infrastructure/repository"
 	"ride-sharing/services/trip-service/internal/service"
 
@@ -35,14 +35,17 @@ func main(){
    if err != nil{
 	log.Fatalf("Failed to listen : %v", err)
    }
-	 grpcsercver  := grpcsercver.NewServer()
-  //TODO intiliaze our grpc handler implementation
+   //TODO intiliaze our grpc handler implementation
 
+   //Starting the gRPC server
+	 grpcserver  := grpcsercver.NewServer()
+  
+  grpc.NewGRPCHandler(grpcserver, svc)
 
   
   log.Printf("Starting gRPC server Trip service on port %s", lis.Addr().String())
-  go func(cause error) {
-if err := grpcsercver.Serve(lis); err != nil{
+  go func() {
+if err := grpcserver.Serve(lis); err != nil{
 	log.Printf("Failed to server : %v", err)
 	cancel()
 }
@@ -50,5 +53,5 @@ if err := grpcsercver.Serve(lis); err != nil{
 	// wait for the shutdown signal
    <-ctx.Done()
    log.Println("Shutting down grpc Server")
-   grpcsercver.GracefulStop()
+   grpcserver.GracefulStop()
 }
