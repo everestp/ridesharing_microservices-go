@@ -8,13 +8,14 @@ import (
 	"os/signal"
 	"syscall"
 
+	"ride-sharing/services/trip-service/internal/infrastructure/events"
 	"ride-sharing/services/trip-service/internal/infrastructure/grpc"
 	"ride-sharing/services/trip-service/internal/infrastructure/repository"
 	"ride-sharing/services/trip-service/internal/service"
 	"ride-sharing/shared/env"
 	"ride-sharing/shared/messaging"
 
-	amqp "github.com/rabbitmq/amqp091-go"
+	// amqp "github.com/rabbitmq/amqp091-go"
 
 	grpcsercver "google.golang.org/grpc"
 )
@@ -47,14 +48,19 @@ rabbitMqURI :=env.GetString("RABBITMQ_URI", "ampq://guest:guest@localhost:5672/"
 	}
 	defer rabbitmq.Close()
 
+
 	log.Println("Starting the Rabbit MQ Connection")
+
+
+	publisher :=events.NewTripEventPublisher(rabbitmq)
+
    
    //TODO intiliaze our grpc handler implementation
 
    //Starting the gRPC server
 	 grpcserver  := grpcsercver.NewServer()
   
-  grpc.NewGRPCHandler(grpcserver, svc)
+  grpc.NewGRPCHandler(grpcserver, svc ,publisher)
 
   
   log.Printf("Starting gRPC server Trip service on port %s", lis.Addr().String())

@@ -45,7 +45,7 @@ k8s_yaml('./infra/development/k8s/api-gateway-deployment.yaml')
 k8s_resource(
   'api-gateway',
   port_forwards=8081,
-  resource_deps=['api-gateway-compile'.'rabbitmq'],
+  resource_deps=['api-gateway-compile','rabbitmq'],
   labels="services",
 )
 ### End of API Gateway ###
@@ -111,7 +111,7 @@ docker_build_with_restart(
 )
 
 k8s_yaml('./infra/development/k8s/driver-service-deployment.yaml')
- k8s_resource('driver-service', resource_deps=['driver-service-compile', 'rabbitmq'], labels="services")
+k8s_resource('driver-service', resource_deps=['driver-service-compile', 'rabbitmq'], labels="services")
 
 ### End of Driver Service ###
 
