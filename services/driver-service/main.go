@@ -10,7 +10,7 @@ import (
 	"ride-sharing/shared/messaging"
 	"syscall"
 
-	amqp "github.com/rabbitmq/amqp091-go"
+	// amqp "github.com/rabbitmq/amqp091-go"
 	grpcsercver "google.golang.org/grpc"
 )
 
