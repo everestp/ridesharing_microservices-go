@@ -1,12 +1,16 @@
 package main
 
 import (
+	math "math/rand/v2"
 	pb "ride-sharing/shared/proto/driver"
 	"ride-sharing/shared/util"
+	"sync"
+	"github.com/mmcloughlin/geohash"
 )
 
 type Service struct {
 	drivers []*driverInMap
+	mu      sync.RWMutex
 }
 
 type driverInMap struct {

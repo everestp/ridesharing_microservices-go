@@ -45,7 +45,7 @@ func (r *RabbitMQ) ConsumeMessage(queueName string, handler MessageHandler) erro
 	msgs, err := r.Channel.Consume(
 		queueName, // queue
 		"",        // consumer tag
-		true,      // auto-ack
+		false,      // auto-ack
 		false,     // exclusive
 		false,     // no-local
 		false,     // no-wait
@@ -63,8 +63,11 @@ func (r *RabbitMQ) ConsumeMessage(queueName string, handler MessageHandler) erro
 			log.Printf("Received message from queue '%s': %s", queueName, msg.Body)
 
 			if err := handler(ctx, msg); err != nil {
-				log.Printf("Handler error: %v", err)
+				log.Printf("ERROR: Failed to handle messagr: %v , Message body : %s", err, msg.Body)
+				
 			}
+			// Only  Ack if the hadler success
+			_ = msg.Ack(false)
 		}
 	}()
 
