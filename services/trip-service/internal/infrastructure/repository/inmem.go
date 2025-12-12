@@ -2,18 +2,19 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"ride-sharing/services/trip-service/internal/domain"
 )
 
 type inmemRepository struct {
 	trips map[string] *domain.TripModal
-	rideFare map[string] *domain.RideFareModel
+	rideFares map[string] *domain.RideFareModel
 }
 
 func NewInmemRepository() *inmemRepository {
 	return  &inmemRepository{
 		trips: make(map[string]*domain.TripModal),
-		rideFare: make(map[string]*domain.RideFareModel),
+		rideFares: make(map[string]*domain.RideFareModel),
 	}
 }
 
@@ -25,9 +26,17 @@ func (r *inmemRepository)CreateTrip( ctx context.Context , trip *domain.TripModa
 	return trip, nil
 
 }
+func (r *inmemRepository) GetRideFareByID(ctx context.Context, id string) (*domain.RideFareModel, error) {
+	fare, exist := r.rideFares[id]
+	if !exist {
+		return nil, fmt.Errorf("fare does not exist with ID: %s", id)
+	}
+
+	return fare, nil
+}
 
 func (r *inmemRepository)SaveRideFare( ctx context.Context ,f *domain.RideFareModel) error{
-r.rideFare[f.ID.Hex()]= f
+r.rideFares[f.ID.Hex()]= f
 return  nil
 
 

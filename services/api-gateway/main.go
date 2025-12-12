@@ -21,20 +21,11 @@ func main() {
 	mux := http.NewServeMux()
 
 
-
-
-
-
-
-
-
-
-
 	
 
 	// FIXED — all routes must start with /
 	mux.HandleFunc("/trip/preview", enableCORS(handleTripPreview))
-	mux.HandleFunc("/ws/drivers", handleDriversWebSocket)
+	mux.HandleFunc("/ws/drivers", enableCORS(handleDriversWebSocket) )
 	mux.HandleFunc("/ws/riders", handleRidersWebSocket)
 
 	server := &http.Server{
