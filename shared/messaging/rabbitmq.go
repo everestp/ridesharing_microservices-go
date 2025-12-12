@@ -48,6 +48,7 @@ func (r *RabbitMQ) PublishMessage(ctx context.Context , routingKey string , mess
   amqp.Publishing {
     ContentType: "text/plain",
     Body:        []byte(message),
+	DeliveryMode: amqp.Persistent ,
   })
 }
 
@@ -58,7 +59,7 @@ func (r *RabbitMQ) PublishMessage(ctx context.Context , routingKey string , mess
 func (r *RabbitMQ) setupExchangesAndQueue() error {
 	_ , err:= r.Channel.QueueDeclare(
 		"hello",  // name
-	 false, //durable
+	 true, //durable
 	  false, //declare when use
 	   false,  //exclusive
 	   false,  // no-wait
