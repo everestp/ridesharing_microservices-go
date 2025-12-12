@@ -39,6 +39,39 @@ func NewRabbitMQ(uri string) (*RabbitMQ, error) {
 	return rmq, nil
 }
 
+type MessageHandler func(context.Context, amqp.Delivery) error
+
+func (r *RabbitMQ) ConsumeMessage(queueName string, handler MessageHandler) error {
+	msgs, err := r.Channel.Consume(
+		queueName, // queue
+		"",        // consumer tag
+		true,      // auto-ack
+		false,     // exclusive
+		false,     // no-local
+		false,     // no-wait
+		nil,       // arguments
+	)
+	if err != nil {
+		return err
+	}
+
+	ctx := context.Background()
+
+	// Start listening in the background
+	go func() {
+		for msg := range msgs {
+			log.Printf("Received message from queue '%s': %s", queueName, msg.Body)
+
+			if err := handler(ctx, msg); err != nil {
+				log.Printf("Handler error: %v", err)
+			}
+		}
+	}()
+
+	return nil
+}
+
+
 func (r *RabbitMQ) PublishMessage(ctx context.Context , routingKey string , message string) error{
  return r.Channel.PublishWithContext(ctx,
   "",     // exchange
