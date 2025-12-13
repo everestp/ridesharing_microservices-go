@@ -7,6 +7,8 @@ import (
 	"os/signal"
 	"syscall"
 
+	"ride-sharing/services/payment-service/internal/infrastructure/stripe"
+	"ride-sharing/services/payment-service/internal/service"
 	"ride-sharing/services/payment-service/pkg/types"
 	"ride-sharing/shared/env"
 	"ride-sharing/shared/messaging"
@@ -41,6 +43,13 @@ func main() {
 		log.Fatalf("STRIPE_SECRET_KEY is not set")
 		return
 	}
+//Stripe Processor
+paymentProcessor := stripe.NewStripeClient(stripeCfg)
+
+// service
+svc := service.NewPaymentService(paymentProcessor)
+
+log.Print(svc)
 
 	// RabbitMQ connection
 	rabbitmq, err := messaging.NewRabbitMQ(rabbitMqURI)
