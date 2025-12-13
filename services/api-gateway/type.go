@@ -1,25 +1,17 @@
 package main
 
-import ( 
+import (
+	pb "ride-sharing/shared/proto/trip"
 	"ride-sharing/shared/types"
-		pb "ride-sharing/shared/proto/trip"
-
-
 )
 
-
-
 type previewTripRequest struct {
-	UserID string `json:"userID"`
-	Pickup types.Coordinate `json:"pickup"`
+	UserID      string           `json:"userID"`
+	Pickup      types.Coordinate `json:"pickup"`
 	Destination types.Coordinate `json:"destination"`
 }
 
 func (p *previewTripRequest) toProto() *pb.PreviewTripRequest {
-	if p == nil  { // FIXED: safe check
-		return &pb.PreviewTripRequest{}
-	}
-
 	return &pb.PreviewTripRequest{
 		UserID: p.UserID,
 		StartLocation: &pb.Coordinate{
@@ -30,5 +22,17 @@ func (p *previewTripRequest) toProto() *pb.PreviewTripRequest {
 			Latitude:  p.Destination.Latitude,
 			Longitude: p.Destination.Longitude,
 		},
+	}
+}
+
+type startTripRequest struct {
+	RideFareID string `json:"rideFareID"`
+	UserID     string `json:"userID"`
+}
+
+func (c *startTripRequest) toProto() *pb.CreateTripRequest {
+	return &pb.CreateTripRequest{
+		RideFareID: c.RideFareID,
+		UserID:     c.UserID,
 	}
 }

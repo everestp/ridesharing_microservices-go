@@ -7,7 +7,7 @@ import (
 	"os/signal"
 	"syscall"
 
-	"ride-sharing/services/payment-service/internal/events"
+"ride-sharing/services/payment-service/internal/events"
 	"ride-sharing/services/payment-service/internal/infrastructure/stripe"
 	"ride-sharing/services/payment-service/internal/service"
 	"ride-sharing/services/payment-service/pkg/types"

@@ -2,11 +2,11 @@ syntax = "proto3";
 
 package trip;
 
-// Correct go_package option
 option go_package = "shared/proto/trip;trip";
 
 service TripService {
   rpc PreviewTrip(PreviewTripRequest) returns (PreviewTripResponse);
+  rpc CreateTrip(CreateTripRequest) returns (CreateTripResponse);
 }
 
 message PreviewTripRequest {
@@ -62,10 +62,10 @@ message Trip {
   TripDriver driver = 6;
 }
 
-// Static Driver object that is  used to store the driver information
-message TripDriver{
-    string id =1 ;
-    string name =2;
-    string profilePicture = 3;
-    string carPlate = 4;
+// Static driver object that is used to store the driver information
+message TripDriver {
+  string id = 1;
+  string name = 2;
+  string profilePicture = 3;
+  string carPlate = 4;
 }

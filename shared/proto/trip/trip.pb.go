@@ -553,7 +553,7 @@ func (x *Trip) GetDriver() *TripDriver {
 	return nil
 }
 
-// Static Driver object that is  used to store the driver information
+// Static driver object that is used to store the driver information
 type TripDriver struct {
 	state          protoimpl.MessageState `protogen:"open.v1"`
 	Id             string                 `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
@@ -672,9 +672,11 @@ const file_trip_proto_rawDesc = "" +
 	"\x02id\x18\x01 \x01(\tR\x02id\x12\x12\n" +
 	"\x04name\x18\x02 \x01(\tR\x04name\x12&\n" +
 	"\x0eprofilePicture\x18\x03 \x01(\tR\x0eprofilePicture\x12\x1a\n" +
-	"\bcarPlate\x18\x04 \x01(\tR\bcarPlate2Q\n" +
+	"\bcarPlate\x18\x04 \x01(\tR\bcarPlate2\x92\x01\n" +
 	"\vTripService\x12B\n" +
-	"\vPreviewTrip\x12\x18.trip.PreviewTripRequest\x1a\x19.trip.PreviewTripResponseB\x18Z\x16shared/proto/trip;tripb\x06proto3"
+	"\vPreviewTrip\x12\x18.trip.PreviewTripRequest\x1a\x19.trip.PreviewTripResponse\x12?\n" +
+	"\n" +
+	"CreateTrip\x12\x17.trip.CreateTripRequest\x1a\x18.trip.CreateTripResponseB\x18Z\x16shared/proto/trip;tripb\x06proto3"
 
 var (
 	file_trip_proto_rawDescOnce sync.Once
@@ -713,9 +715,11 @@ var file_trip_proto_depIdxs = []int32{
 	4,  // 8: trip.Trip.route:type_name -> trip.Route
 	9,  // 9: trip.Trip.driver:type_name -> trip.TripDriver
 	0,  // 10: trip.TripService.PreviewTrip:input_type -> trip.PreviewTripRequest
-	1,  // 11: trip.TripService.PreviewTrip:output_type -> trip.PreviewTripResponse
-	11, // [11:12] is the sub-list for method output_type
-	10, // [10:11] is the sub-list for method input_type
+	6,  // 11: trip.TripService.CreateTrip:input_type -> trip.CreateTripRequest
+	1,  // 12: trip.TripService.PreviewTrip:output_type -> trip.PreviewTripResponse
+	7,  // 13: trip.TripService.CreateTrip:output_type -> trip.CreateTripResponse
+	12, // [12:14] is the sub-list for method output_type
+	10, // [10:12] is the sub-list for method input_type
 	10, // [10:10] is the sub-list for extension type_name
 	10, // [10:10] is the sub-list for extension extendee
 	0,  // [0:10] is the sub-list for field type_name
