@@ -13,10 +13,10 @@ import (
 
 type tripConsumer struct {
 	rabbitmq *messaging.RabbitMQ
-	service *Service
+	service  *Service
 }
 
-func NewTripConsumer(rabbitmq *messaging.RabbitMQ , service *Service) *tripConsumer {
+func NewTripConsumer(rabbitmq *messaging.RabbitMQ, service *Service) *tripConsumer {
 	return &tripConsumer{
 		rabbitmq: rabbitmq,
 		service:  service,

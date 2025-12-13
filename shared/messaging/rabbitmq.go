@@ -7,6 +7,8 @@ import (
 	"log"
 	"ride-sharing/shared/contracts"
 	"ride-sharing/shared/retry"
+	"ride-sharing/shared/tracing"
+
 	// "ride-sharing/shared/tracing"
 
 	amqp "github.com/rabbitmq/amqp091-go"

@@ -9,7 +9,7 @@ import (
 	"ride-sharing/services/trip-service/internal/domain"
 	tripTypes "ride-sharing/services/trip-service/pkg/types"
 		// tripTypes "ride-sharing/services/trip-service/pkg/types"
-	// pbd "ride-sharing/shared/proto/driver"
+	 pbd "ride-sharing/shared/proto/driver"
 	pb "ride-sharing/shared/proto/trip"
 	"ride-sharing/shared/types"
 
@@ -28,8 +28,8 @@ func NewService(repo domain.TripRepository) *service {
 	}
 }
 
-func (s *service) CreateTrip(ctx context.Context, fare *domain.RideFareModel) (*domain.TripModal, error) {
-	t := &domain.TripModal{
+func (s *service) CreateTrip(ctx context.Context, fare *domain.RideFareModel) (*domain.TripModel, error) {
+	t := &domain.TripModel{
 		ID:       primitive.NewObjectID(),
 		UserID:   fare.UserID,
 		Status:   "Pending",
