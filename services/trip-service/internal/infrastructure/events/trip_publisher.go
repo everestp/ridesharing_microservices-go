@@ -22,6 +22,6 @@ func NewTripEventPublisher(rabbitmq *messaging.RabbitMQ) *TripEventPublisher {
 }
 
 
-func (p *TripEventPublisher) PublishWithContext(ctx context.Context) error {
-return  p.rabbitmq.PublishMessage(ctx,contracts.TripEventCreated, "Hello world")
+func (p *TripEventPublisher) PublishWithContext(ctx context.Context ) error {
+return  p.rabbitmq.PublishMessage(ctx,contracts.TripEventCreated, "Trip has been created")
 }
