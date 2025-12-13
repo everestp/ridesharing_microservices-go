@@ -143,3 +143,11 @@ func getBaseFares() []*domain.RideFareModel {
 		},
 	}
 }
+
+func (s *service) GetTripByID(ctx context.Context, id string) (*domain.TripModel, error) {
+	return s.repo.GetTripByID(ctx, id)
+}
+
+func (s *service) UpdateTrip(ctx context.Context, tripID string, status string, driver *pbd.Driver) error {
+	return s.repo.UpdateTrip(ctx, tripID, status, driver)
+}
