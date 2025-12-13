@@ -17,6 +17,7 @@ spec:
           image: ride-sharing/trip-service
           ports:
             - containerPort: 9093
+              name: grpc
           resources:
             requests:
               memory: "64Mi"
@@ -25,11 +26,26 @@ spec:
               memory: "128Mi"
               cpu: "200m"
           env:
-          - name: RABBITMQ_URI
-            valueFrom:
-              secretKeyRef:
-                name: rabbitmq-credentials
-                key: uri
+            - name: MONGODB_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongodb
+                  key: uri
+            - name: RABBITMQ_URI
+              valueFrom:
+                secretKeyRef:
+                  name: rabbitmq-credentials
+                  key: uri
+          livenessProbe:
+            tcpSocket:
+              port: 9093
+            initialDelaySeconds: 15
+            periodSeconds: 20
+          readinessProbe:
+            tcpSocket:
+              port: 9093
+            initialDelaySeconds: 5
+            periodSeconds: 10
 ---
 apiVersion: v1
 kind: Service
@@ -39,7 +55,7 @@ spec:
   selector:
     app: trip-service
   ports:
-    - port: 9093
-      name: grpc
+    - name: grpc
+      port: 9093
       targetPort: 9093
   type: ClusterIP
