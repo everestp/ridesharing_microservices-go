@@ -41,6 +41,7 @@ rabbitMqURI :=env.GetString("RABBITMQ_URI", "ampq://guest:guest@localhost:5672/"
 	log.Fatalf("Failed to listen : %v", err)
    }
 
+
    //RabbitMQ connection
     rabbitmq ,err :=messaging.NewRabbitMQ(rabbitMqURI)
 	if err != nil{

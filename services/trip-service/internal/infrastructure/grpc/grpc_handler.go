@@ -32,25 +32,21 @@ func NewGRPCHandler(server *grpc.Server, service domain.TripService ,publisher *
 func (h *gRPCHandler) CreateTrip(ctx context.Context, req *pb.CreateTripRequest) (*pb.CreateTripResponse, error) {
 	fareID := req.GetRideFareID()
 	userID := req.GetUserID()
-	// fetch and validte the  fare
+
 	rideFare, err := h.service.GetAndValidateFare(ctx, fareID, userID)
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "Failed to Validate the fare: %v", err)
+		return nil, status.Errorf(codes.Internal, "failed to validate the fare: %v", err)
 	}
 
-	// 2. Call create trip
 	trip, err := h.service.CreateTrip(ctx, rideFare)
 	if err != nil {
-		return nil, status.Errorf(codes.Internal, "Failed to Create the trip: %v", err)
+		return nil, status.Errorf(codes.Internal, "failed to create the trip: %v", err)
 	}
 
-	// RabbitMQ
-	if err := h.publisher.PublishWithContext(ctx); err != nil{
-		return  nil ,  status.Errorf(codes.Internal, "failed to published the trip created  event: %v", err)
+	if err := h.publisher.PublishTripCreated(ctx, trip); err != nil {
+		return nil, status.Errorf(codes.Internal, "failed to publish the trip created event: %v", err)
 	}
 
-	// 3. WE also need to initiliaze any empty drive to the trip
-	// 4. Add a comment at the end of the function to published an event on the aysnc comms module
 	return &pb.CreateTripResponse{
 		TripID: trip.ID.Hex(),
 	}, nil

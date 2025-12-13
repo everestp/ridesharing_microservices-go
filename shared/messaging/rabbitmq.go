@@ -139,7 +139,7 @@ func (r *RabbitMQ) PublishMessage(ctx context.Context, routingKey string, messag
 
 func (r *RabbitMQ) publish(ctx context.Context, exchange, routingKey string, msg amqp.Publishing) error {
 	return r.Channel.PublishWithContext(ctx,
-		ex change,   // exchange
+		exchange,   // exchange
 		routingKey, // routing key
 		false,      // mandatory
 		false,      // immediate
